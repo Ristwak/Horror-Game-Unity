@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class KeyPickUp : MonoBehaviour
 {
@@ -8,50 +6,58 @@ public class KeyPickUp : MonoBehaviour
     public GameObject objToActivate;
 
     private GameObject ob;
-
-
     private bool inReach;
-
+    private bool isCollected;
 
     void Start()
     {
-        handUI.SetActive(false);
+        if (handUI != null)
+            handUI.SetActive(false);
 
-        objToActivate.SetActive(false);
+        if (objToActivate != null)
+            objToActivate.SetActive(false);
 
         ob = this.gameObject;
-
     }
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Reach")
+        if (other.CompareTag("Reach") && !isCollected)
         {
             inReach = true;
-            handUI.SetActive(true);
-        }
 
+            if (handUI != null)
+                handUI.SetActive(true);
+        }
     }
 
     void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.tag == "Reach")
+        if (other.CompareTag("Reach"))
         {
             inReach = false;
-            handUI.SetActive(false);
+
+            if (handUI != null)
+                handUI.SetActive(false);
         }
     }
 
     void Update()
     {
+        if (!inReach || isCollected || !Input.GetButtonDown("Interact"))
+            return;
 
+        isCollected = true;
 
-        if (inReach && Input.GetButtonDown("Interact"))
-        {
+        if (handUI != null)
             handUI.SetActive(false);
-            objToActivate.SetActive(true);
-            ob.GetComponent<MeshRenderer>().enabled = false;
-        }
-    }
 
+        if (objToActivate != null)
+            objToActivate.SetActive(true);
+
+        MeshRenderer meshRenderer = ob.GetComponent<MeshRenderer>();
+
+        if (meshRenderer != null)
+            meshRenderer.enabled = false;
+    }
 }
