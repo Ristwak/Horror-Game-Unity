@@ -1,6 +1,6 @@
-# SIMPLE HORROR GAME — TECHNICAL REVIEW REPORT
+# HORROR GAME — TECHNICAL REVIEW REPORT
 
-**Project:** Simple Horror Game  
+**Project:** Horror Game  
 **Engine:** Unity  
 **Language:** C#  
 **Genre:** First-Person Horror  
@@ -11,7 +11,7 @@
 
 ## 1. Project Overview
 
-Simple Horror Game is a horror game project developed using Unity.
+Horror Game is a horror game project developed using Unity.
 
 The project contains multiple gameplay systems responsible for player movement, enemy behaviour, combat, object interactions, pickups, and scene transitions.
 
@@ -249,7 +249,7 @@ Some gameplay dependencies and behaviour changes still require verification insi
 
 ## 9. Commit Message
 
-docs: add technical review report for Simple Horror Game
+docs: add technical review report for  Horror Game
 
 - Document project structure and gameplay systems
 - Review individual C# scripts
