@@ -3,29 +3,45 @@ using UnityEngine.SceneManagement;
 
 public class KillPlayer : MonoBehaviour
 {
-    public string nextSceneName; // Name of the next scene to load
-    public float delay = 0.5f; // Delay in seconds before loading the next scene
+    public string nextSceneName;
+    public float delay = 0.5f;
     public GameObject fadeout;
 
-    private bool playerInsideTrigger = false;
+    private bool playerInsideTrigger;
+    private bool transitionStarted;
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
-        {
-            playerInsideTrigger = true;
+        if (!other.CompareTag("Player") || transitionStarted)
+            return;
+
+        playerInsideTrigger = true;
+
+        if (fadeout != null)
             fadeout.SetActive(true);
-            Invoke("LoadNextScene", delay);
-        }
+
+        CancelInvoke(nameof(LoadNextScene));
+        Invoke(nameof(LoadNextScene), delay);
     }
 
+    private void OnTriggerExit(Collider other)
+    {
+        if (!other.CompareTag("Player") || transitionStarted)
+            return;
+
+        playerInsideTrigger = false;
+        CancelInvoke(nameof(LoadNextScene));
+
+        if (fadeout != null)
+            fadeout.SetActive(false);
+    }
 
     private void LoadNextScene()
     {
-        if (playerInsideTrigger)
-        {
-            // Load the next scene by name
-            SceneManager.LoadScene(nextSceneName);
-        }
+        if (!playerInsideTrigger || transitionStarted)
+            return;
+
+        transitionStarted = true;
+        SceneManager.LoadScene(nextSceneName);
     }
 }

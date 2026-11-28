@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class LanturnPickUp : MonoBehaviour
@@ -8,54 +7,63 @@ public class LanturnPickUp : MonoBehaviour
     public GameObject handUI;
     public GameObject lanturn;
 
-
     private bool inReach;
-
+    private bool isCollected;
 
     void Start()
     {
         OB = this.gameObject;
 
-        handUI.SetActive(false);
+        if (handUI != null)
+            handUI.SetActive(false);
 
-        lanturn.SetActive(false);
-
+        if (lanturn != null)
+            lanturn.SetActive(false);
     }
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Reach")
+        if (other.CompareTag("Reach") && !isCollected)
         {
             inReach = true;
-            handUI.SetActive(true);
-        }
 
+            if (handUI != null)
+                handUI.SetActive(true);
+        }
     }
 
     void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.tag == "Reach")
+        if (other.CompareTag("Reach"))
         {
             inReach = false;
-            handUI.SetActive(false);
+
+            if (handUI != null)
+                handUI.SetActive(false);
         }
     }
 
     void Update()
     {
+        if (!inReach || isCollected || !Input.GetButtonDown("Interact"))
+            return;
 
+        isCollected = true;
 
-        if (inReach && Input.GetButtonDown("Interact"))
-        {
+        if (handUI != null)
             handUI.SetActive(false);
+
+        if (lanturn != null)
             lanturn.SetActive(true);
-            StartCoroutine(end());
-        }
+
+        StartCoroutine(end());
     }
 
     IEnumerator end()
     {
-        yield return new WaitForSeconds(.01f);
-        Destroy(OB);
+        yield return new WaitForSeconds(0.01f);
+
+        if (OB != null)
+            Destroy(OB);
     }
 }
